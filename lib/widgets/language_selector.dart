@@ -36,13 +36,18 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       items: languages.map((language) {
         return DropdownMenuItem<String>(
-          value: language["id"],
-          child: Text(language["name"]!),
-        );
+            value: language["id"],
+            child: Text(
+              language["name"]!,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ));
       }).toList(),
       onChanged: (value) {
         if (value != null) {
