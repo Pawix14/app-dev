@@ -1,0 +1,992 @@
+class Exercise {
+  final String id;
+  final String lessonId;
+  final ExerciseType type;
+  final String question;
+  final String category;
+  final List<String> options;
+  final String correctAnswer;
+  final String dialect;
+  final String? hint;
+
+  Exercise({
+    required this.id,
+    required this.lessonId,
+    required this.type,
+    required this.question,
+    required this.options,
+    required this.correctAnswer,
+    required this.dialect,
+    this.hint,
+    required this.category,
+  });
+}
+
+enum ExerciseType {
+  vocabulary,
+  phrase,
+  numbers,
+  conversation,
+  listening,
+  multipleChoice
+}
+
+// Sample exercises
+List<Exercise> sampleExercises = [
+  // Tagalog Exercises (10 questions)
+  Exercise(
+      id: "1",
+      lessonId: "basic_tagalog",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "What is 'Hello' in Tagalog?",
+      options: ["Kumusta", "Salamat", "Paalam", "Oo"],
+      correctAnswer: "Kumusta",
+      dialect: "Tagalog"),
+  // Add 9 more questions for Tagalog...
+
+  // Cebuano Exercises (10 questions)
+  Exercise(
+      id: "11",
+      lessonId: "basic_cebuano",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'Thank you' in Cebuano?",
+      options: ["Salamat", "Walay sapayan", "Kumusta", "Paalam"],
+      correctAnswer: "Salamat",
+      dialect: "Cebuano"),
+  // Add 9 more questions for Cebuano...
+
+  // Ilonggo Exercises (10 questions)
+  Exercise(
+      id: "21",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'Good morning' in Ilonggo?",
+      options: [
+        "Maayong buntag",
+        "Maayong aga",
+        "Maayong hapon",
+        "Maayong gab-i"
+      ],
+      correctAnswer: "Maayong aga",
+      dialect: "Ilonggo"),
+
+  /// ✅ **Basic Greetings in Ilonggo (Added)**
+  Exercise(
+      id: "22",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "What is the Ilonggo word for 'Hello'?",
+      options: ["Kumusta", "Salamat", "Paalam", "Oo"],
+      correctAnswer: "Kumusta",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "23",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "What does 'Salamat' mean in Ilonggo?",
+      options: ["Hello", "Goodbye", "Thank you", "Yes"],
+      correctAnswer: "Thank you",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "24",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "Translate: 'Thank you' to Ilonggo",
+      options: ["Salamat", "Walang anuman", "Paalam", "Kumusta"],
+      correctAnswer: "Salamat",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "25",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'Goodbye' in Ilonggo?",
+      options: ["Paalam", "Kumusta", "Indi", "Halong"],
+      correctAnswer: "Halong",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "26",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "What is the Ilonggo word for 'How are you?'",
+      options: ["Ano ini?", "Diin ka?", "Kumusta ka?", "Sin-o siya?"],
+      correctAnswer: "Kumusta ka?",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "27",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'You're welcome' in Ilonggo?",
+      options: ["Wala sapayan", "Salamat", "Halong", "Palihug"],
+      correctAnswer: "Wala sapayan",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "28",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "What is the Ilonggo word for 'Please'?",
+      options: ["Pasaylo", "Halong", "Maayong buntag", "Palihug"],
+      correctAnswer: "Palihug",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "29",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'Excuse me' in Ilonggo?",
+      options: ["Palihug", "Wala sapayan", "Pasensiya na", "Maayong gab-i"],
+      correctAnswer: "Pasensiya na",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "30",
+      lessonId: "basic_ilonggo",
+      category: "Basic Greetings",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'Good afternoon' in Ilonggo?",
+      options: [
+        "Maayong gab-i",
+        "Maayong buntag",
+        "Maayong hapon",
+        "Kumusta ka?"
+      ],
+      correctAnswer: "Maayong hapon",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "22",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.vocabulary,
+      question: "What is 'ten' in Ilonggo?",
+      options: ["Pito", "Napulo", "Lima", "Walo"],
+      correctAnswer: "Napulo",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "51",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "How do you say 'hundred' in Ilonggo?",
+      options: ["Gatos", "Libo", "Napulo", "Lima ka pulo"],
+      correctAnswer: "Gatos",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "52",
+      lessonId: "numbers_ilonggon",
+      category: "Numbers & Counting",
+      type: ExerciseType.vocabulary,
+      question: "What is 'one thousand' in Ilonggo?",
+      options: ["Isa ka libo", "Napulo", "Gatos", "Isa ka gatos"],
+      correctAnswer: "Isa ka libo",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "53",
+      lessonId: "numbers_ilonggon",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "If you have 'lima ka mangga,' how many mangoes do you have?",
+      options: ["Three", "Five", "Seven", "Ten"],
+      correctAnswer: "Five",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "54",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "What does 'pito ka itlog' mean?",
+      options: ["Seven eggs", "Five eggs", "Ten eggs", "Three eggs"],
+      correctAnswer: "Seven eggs",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "55",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "If you add 'Isa' and 'Duha,' what is the total in Ilonggo?",
+      options: ["Lima", "Apat", "Tatlo", "Walo"],
+      correctAnswer: "Tatlo (1 + 2 = 3)",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "56",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "What is the Ilonggo word for 'twenty'?",
+      options: ["Pulo", "Kuarenta", "Kapulo", "Kaluhaan"],
+      correctAnswer: "Kaluhaan",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "57",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "If you remove 'Tatlo' from 'Lima,' how many are left?",
+      options: ["Duha", "Apat", "Isa", "Walo"],
+      correctAnswer: "Duha (5 - 3 = 2)",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "58",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "How do you say 'fifteen' in Ilonggo?",
+      options: ["Lima ka pulo", "Napulo kag lima", "Kaluhaan", "Noybe"],
+      correctAnswer: "Napulo kag lima",
+      dialect: "Ilonggo"),
+
+  Exercise(
+      id: "59",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.phrase,
+      question: "How do you say 'thirty' in Ilonggo?",
+      options: ["Katlu-an", "Kaluhaan", "Kapulo", "Katloan"],
+      correctAnswer: "Katloan",
+      dialect: "Ilonggo"),
+  Exercise(
+    id: "3n9",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question:
+        "If you refer to someone as 'Tiyo' or 'Tiya,' what is their relation to you?",
+    options: ["Grandparent", "Parent", "Aunt/Uncle", "Cousin"],
+    correctAnswer: "Aunt/Uncle",
+    dialect: "Ilonggo",
+  ),
+
+  Exercise(
+    id: "3n10",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question: "What is the Ilonggo term for 'Son/Daughter-in-law'?",
+    options: ["Ugangan", "Hipag", "Umagad", "Hinablos"],
+    correctAnswer: "Umagad",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n1",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.vocabulary,
+    question:
+        "If your sibling is older than you, how would you address them respectfully?",
+    options: ["Utod", "Manghod", "Manong / Manang", "Hipag"],
+    correctAnswer: "Manong / Manang",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n2",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question: "What is the Ilonggo term for 'Father-in-law'?",
+    options: ["Ugangan", "Biyenan", "Bayaw", "Bana"],
+    correctAnswer: "Ugangan",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n3",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.vocabulary,
+    question:
+        "If someone is your 'Hinablos,' what is your relationship to them?",
+    options: [
+      "They are your nephew/niece",
+      "They are your cousin",
+      "They are your uncle/aunt",
+      "They are your sibling-in-law"
+    ],
+    correctAnswer: "They are your nephew/niece",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n4",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question: "What is the Ilonggo word for 'Brother-in-law'?",
+    options: ["Hipag", "Bayaw", "Manong", "Utod"],
+    correctAnswer: "Bayaw",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n5",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question:
+        "If your cousin is younger than you, which term could you use to refer to them?",
+    options: ["Manghod", "Apo", "Bata", "Bayaw"],
+    correctAnswer: "Manghod",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n6",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question: "In Ilonggo, what does 'Bata' mean?",
+    options: ["Father", "Child", "Grandfather", "Uncle"],
+    correctAnswer: "Child",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n7",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question: "How do you say 'Grandmother' in Ilonggo?",
+    options: ["Lolo", "Lola", "Amay", "Hipag"],
+    correctAnswer: "Lola",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "3n8",
+    lessonId: "family_ilonggo",
+    category: "Family Members",
+    type: ExerciseType.phrase,
+    question:
+        "If someone is your 'Biyenan,' what is your relationship with them?",
+    options: [
+      "They are your cousin",
+      "They are your parents-in-law",
+      "They are your older sibling",
+      "They are your grandchild"
+    ],
+    correctAnswer: "They are your parents-in-law",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "4n1",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question: "What is the Cebuano word for 'Yesterday'?",
+    options: ["Karon", "Unya", "Kagahapon", "Sunod"],
+    correctAnswer: "Kagahapon",
+    hint: "It refers to the day before today.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n2",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "What does 'Don't forget your promise' mean in Cebuano?",
+    options: [
+      "Ayaw kalimti ang imong saad",
+      "Wala ko'y problema",
+      "Pwede ko maghuwam?",
+      "Gusto ko mokaon karon",
+    ],
+    correctAnswer: "Ayaw kalimti ang imong saad",
+    hint: "Used when reminding someone to keep their commitment.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n3",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question: "What is the opposite of 'Hot' in Cebuano?",
+    options: ["Baga", "Bugnaw", "Init", "Dugay"],
+    correctAnswer: "Bugnaw",
+    hint: "It describes something that is not warm.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n4",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "How do you say 'Not everything is important' in Cebuano?",
+    options: [
+      "Dili tanan butang mahalaga",
+      "Daghan kaayo akong buhaton",
+      "Kinahanglan ko'g tabang",
+      "Asa ang imong balay?",
+    ],
+    correctAnswer: "Dili tanan butang mahalaga",
+    hint: "A phrase used when emphasizing priorities in life.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n5",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "What does 'Moving forward despite hardships' translate to in Cebuano?",
+    options: [
+      "Padayon sa kinabuhi",
+      "Magpaabot ko nimo",
+      "Naglibog ko",
+      "Dili ko sigurado",
+    ],
+    correctAnswer: "Padayon sa kinabuhi",
+    hint: "It means to keep going even when things are tough.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n6",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question: "What is the Cebuano word for 'Small'?",
+    options: ["Dako", "Dili", "Gamay", "Taas"],
+    correctAnswer: "Gamay",
+    hint: "It describes something that is not big.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n7",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "How do you say 'Sorry, I was late' in Cebuano?",
+    options: [
+      "Nalipay ko nga nakaila ko nimo",
+      "Pasayloa ko, naulahi ko",
+      "Pwede ko maghulam?",
+      "Asa ka gikan?",
+    ],
+    correctAnswer: "Pasayloa ko, naulahi ko",
+    hint: "A phrase used when apologizing for arriving late.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n8",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "What does 'I want a direct answer' translate to in Cebuano?",
+    options: [
+      "Gusto ko ug tin-aw nga tubag",
+      "Ayaw paglangan",
+      "Ganahan ko nimo",
+      "Magkita ta unya",
+    ],
+    correctAnswer: "Gusto ko ug tin-aw nga tubag",
+    hint: "Used when asking someone not to be vague.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n9",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "What is the correct response to 'Are you full?' in Cebuano?",
+    options: [
+      "Oo, lami kaayo!",
+      "Wala ko kasabot",
+      "Unsa imong pangalan?",
+      "Dili ko ganahan ug isda",
+    ],
+    correctAnswer: "Oo, lami kaayo!",
+    hint: "A common reply after eating a satisfying meal.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n10",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question: "What does 'Hardworking' translate to in Cebuano?",
+    options: ["Makalagot", "Madasigon", "Malipayon", "Paspas"],
+    correctAnswer: "Madasigon",
+    hint: "It describes a person who is diligent and determined.",
+    dialect: "Cebuano",
+  ),
+
+  Exercise(
+    id: "4n11",
+    lessonId: "phrases_tagalog",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question: "What is the Cebuano term for 'Beautiful'?",
+    options: ["Gwapa", "Gwapo", "Lami", "Lain"],
+    correctAnswer: "Gwapa",
+    hint: "It describes something that is visually pleasing.",
+    dialect: "Cebuano",
+  ),
+  Exercise(
+    id: "e1",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question: "What does 'Ano ang imo ginahimo subong'? mean?",
+    options: [
+      "What are you doing right now?",
+      "Where are you going?",
+      "How are you?",
+      "What is your name?"
+    ],
+    correctAnswer: "What are you doing right now?",
+    hint: "It's used when asking someone about their current activity.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e2",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "If someone says 'Indi ko gusto magbakal kay mahal gid ang presyo,' what do they mean?",
+    options: [
+      "I don't want to buy it because the price is too expensive.",
+      "I want to buy it because it's cheap.",
+      "How much is this item?",
+      "I am looking for a discount.",
+    ],
+    correctAnswer: "I don't want to buy it because the price is too expensive.",
+    hint: "It means the item is costly.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e3",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.vocabulary,
+    question:
+        "What is the Ilonggo translation of 'Where can I buy cheap food here'?",
+    options: [
+      "Diin ako makapalit sang barato nga pagkaon diri?",
+      "Pila ini?",
+      "Diin ang merkado?",
+      "Gusto mo magkaon?"
+    ],
+    correctAnswer: "Diin ako makapalit sang barato nga pagkaon diri?",
+    hint: "This phrase is used when looking for affordable food.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e4",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "'I am happy to have met you' in Ilonggo?",
+    options: [
+      "Gusto ko magkadto sa mall.",
+      "Ginakalipay ko nga nakilala taka",
+      "Nalipat ako sang imo ngalan.",
+      "Tagpila ini?",
+    ],
+    correctAnswer: "Ginakalipay ko nga nakilala taka",
+    hint: "A polite phrase when meeting someone.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e5",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "If someone asks, 'Palihug, pahulam anay sang imo lapis kay wala ako dala,' what are they asking for?",
+    options: [
+      "To borrow a pencil because they didn't bring one.",
+      "To use your phone to call someone.",
+      "Directions to the nearest school.",
+      "Help in carrying something heavy.",
+    ],
+    correctAnswer: "To borrow a pencil because they didn't bring one.",
+    hint: "It's a common phrase when someone forgot their writing tool.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e6",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "Which Ilonggo phrase means 'Can you help me because I don't know how to do this?'",
+    options: [
+      "Ano ang imo ginahimo subong?",
+      "Pwede mo ako buligan kay indi ko kabalo sini?",
+      "Tagadiin ka?",
+      "Halong sa imo paglakbay!",
+    ],
+    correctAnswer: "Pwede mo ako buligan kay indi ko kabalo sini?",
+    hint: "Used when asking for assistance in understanding something.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e7",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question: "How do you say 'Sorry for arriving late' in Ilonggo?",
+    options: [
+      "Nalipay ako nga ari ka diri.",
+      "Pasensiya na kay nadugay ako sa pag-abot.",
+      "Palihug, pabulig anay.",
+      "Wala ko kabalo kung diin ini.",
+    ],
+    correctAnswer: "Pasensiya na kay nadugay ako sa pag-abot.",
+    hint: "A phrase used when apologizing for being late.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e8",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "What does 'Lapad lang balay namon sa merkado, mga lima lang ka minuto nga paglakad' mean?",
+    options: [
+      "Our house is near the market, about a five-minute walk.",
+      "The market is closed for five minutes.",
+      "My house is far from the market, about an hour away.",
+      "I want to go to the market tomorrow.",
+    ],
+    correctAnswer: "Our house is near the market, about a five-minute walk.",
+    hint: "It's used when giving directions about home location.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e9",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "If someone says 'Kon may problema ka, indi magduha-duha magpangayo sang bulig,' what do they mean?",
+    options: [
+      "If you have a problem, don't hesitate to ask for help.",
+      "I don't have a problem, so I won't ask for help.",
+      "Can you help me with my problem?",
+      "I am looking for advice on something.",
+    ],
+    correctAnswer: "If you have a problem, don't hesitate to ask for help.",
+    hint: "A phrase used to encourage asking for assistance.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e10",
+    lessonId: "phrases_ilonggo",
+    category: "Common Phrases",
+    type: ExerciseType.phrase,
+    question:
+        "How do you say 'I want to learn how to speak Ilonggo properly' in Ilonggo?",
+    options: [
+      "Gusto ko magtuon maghambal sang husto nga Ilonggo.",
+      "Wala ko kabalo maghambal Ilonggo.",
+      "Mahambal ka Ilonggo?",
+      "Gusto ko magkadto sa Iloilo.",
+    ],
+    correctAnswer: "Gusto ko magtuon maghambal sang husto nga Ilonggo.",
+    hint: "Used when expressing a desire to learn the language.",
+    dialect: "Ilonggo",
+  ),
+  Exercise(
+    id: "e1",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.vocabulary,
+    question: "What is 'ninety-nine' in Tagalog?",
+    options: [
+      "Siyamnaput siyam",
+      "Pitumpu't walo",
+      "Animnapu't pito",
+      "Walong daan"
+    ],
+    correctAnswer: "Siyamnaput siyam",
+  ),
+  Exercise(
+    id: "e2",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.phrase,
+    question: "Multiply 'dalawa' and 'lima.' What is the result in Tagalog?",
+    options: [
+      "Sampu",
+      "Labing-isa",
+      "Tatlumpo",
+      "Dalawampu",
+    ],
+    correctAnswer: "Sampu",
+  ),
+  Exercise(
+    id: "e3",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.vocabulary,
+    question: "What is 'two hundred fifty' in Tagalog?",
+    options: [
+      "Dalawang daan limampu",
+      "Limang daan tatlumpu",
+      "Isang libo",
+      "Apatnaput lima"
+    ],
+    correctAnswer: "Dalawang daan limampu",
+  ),
+  Exercise(
+    id: "e4",
+    dialect: "Tagalog",
+    
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.phrase,
+    question:
+        "If you have 'tatlumpu't limang libro,' how many books do you have?",
+    options: [
+      "Thirty",
+      "Thirty-five",
+      "Twenty-five",
+      "Fifty",
+    ],
+    correctAnswer: "Thirty-five",
+  ),
+  Exercise(
+    id: "e5",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.vocabulary,
+    question: "What does 'apatnapu't pito' mean?",
+    options: [
+      "Thirty-seven",
+      "Forty-seven",
+      "Twenty-seven",
+      "Fifty-seven",
+    ],
+    correctAnswer: "Forty-seven",
+  ),
+  Exercise(
+    id: "e6",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.phrase,
+    question: "What is 'seventy-five' in Tagalog?",
+    options: [
+      "Pitumpu't lima",
+      "Animnaput pito",
+      "Siyamnaput dalawa",
+      "Limampu't tatlo",
+    ],
+    correctAnswer: "Pitumpu't lima",
+  ),
+  Exercise(
+    id: "e7",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.phrase,
+    question:
+        "If you subtract 'dalawampu't lima' from 'limampu,' what is the result?",
+    options: [
+      "Tatlumpo",
+      "Dalawampu",
+      "Dalawampu't lima",
+      "Sampu",
+    ],
+    correctAnswer: "Dalawampu't lima",
+  ),
+  Exercise(
+    id: "e8",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.vocabulary,
+    question: "What is 'one thousand two hundred' in Tagalog?",
+    options: [
+      "Isang libo",
+      "Isang libo dalawang daan",
+      "Limang libo",
+      "Siyamnaput pito"
+    ],
+    correctAnswer: "Isang libo dalawang daan",
+  ),
+  Exercise(
+    id: "e9",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.phrase,
+    question: "How do you say 'eight hundred eighty-eight' in Tagalog?",
+    options: [
+      "Walong daan at walo",
+      "Walong daan at walumpu’t walo",
+      "Walong daan pitumpu't pito",
+      "Siyamnapu't walo",
+    ],
+    correctAnswer: "Walong daan at walumpu’t walo",
+  ),
+  Exercise(
+    id: "e10",
+    dialect: "Tagalog",
+    lessonId: "numbers_tagalog",
+    category: "Numbers & Counting",
+    type: ExerciseType.phrase,
+    question:
+        "If you divide 'apatnapu' by 'walo,' what is the result in Tagalog?",
+    options: [
+      "Lima",
+      "Anim",
+      "Apat",
+      "Walo",
+    ],
+    correctAnswer: "Lima",
+  ),
+  Exercise(
+    id: "e1",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "What is 'ten' in Cebuano?",
+    options: ["Pito", "Napu", "Tulo", "Lima"],
+    correctAnswer: "Napu",
+  ),
+  Exercise(
+    id: "e2",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "How do you say 'twenty-five' in Cebuano?",
+    options: ["Baynte singko", "Katloan", "Kwarenta", "Disiotso"],
+    correctAnswer: "Baynte singko",
+  ),
+  Exercise(
+    id: "e3",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "What number is 'Trenta'?",
+    options: ["Twenty", "Thirty", "Forty", "Fifty"],
+    correctAnswer: "Thirty",
+  ),
+  Exercise(
+    id: "e4",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "If you add 'lima' and 'walo', what is the sum?",
+    options: ["Napu", "Pito", "Nuybe", "Dose"],
+    correctAnswer: "Dose",
+  ),
+  Exercise(
+    id: "e5",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "What is 'forty' in Cebuano?",
+    options: ["Trenta", "Singkwenta", "Kwarenta", "Bainti"],
+    correctAnswer: "Kwarenta",
+  ),
+  Exercise(
+    id: "e6",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "Which is bigger, 'napulo' or 'baynte'?",
+    options: ["Napulo", "Baynte", "Parehas", "Wala sa choices"],
+    correctAnswer: "Baynte",
+  ),
+  Exercise(
+    id: "e7",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "What comes after 'Trenta'?",
+    options: ["Baynte", "Singkwenta", "Kwarenta", "Katloan"],
+    correctAnswer: "Kwarenta",
+  ),
+  Exercise(
+    id: "e8",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "How do you say 'seventy' in Cebuano?",
+    options: ["Sitenta", "Nobenta", "Otsenta", "Singkwenta"],
+    correctAnswer: "Sitenta",
+  ),
+  Exercise(
+    id: "e9",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "How do you say 'eighty-five' in Cebuano?",
+    options: [
+      "Sitenta singko",
+      "Nobenta singko",
+      "Otsenta singko",
+      "Trenta singko"
+    ],
+    correctAnswer: "Otsenta singko",
+  ),
+  Exercise(
+    id: "e10",
+    lessonId: "numbers_cebuano",
+    category: "Numbers & Counting",
+    dialect: "Cebuano",
+    type: ExerciseType.numbers,
+    question: "What is 'ninety-nine' in Cebuano?",
+    options: [
+      "Nobenta otso",
+      "Sitenta nuybe",
+      "Nobenta nuybe",
+      "Otsenta nuybe"
+    ],
+    correctAnswer: "Nobenta nuybe",
+  ),
+
+  // Additional Philippine Language (10 questions)
+  Exercise(
+      id: "211",
+      lessonId: "numbers_cebuano",
+      category: "Numbers & Counting",
+      type: ExerciseType.vocabulary,
+      question: "What is 'Goodbye' in your language?",
+      options: ["Paalam", "Adios", "Bye", "See you"],
+      correctAnswer: "Paalam",
+      dialect: "Other"),
+  // Add 9 more questions...
+];

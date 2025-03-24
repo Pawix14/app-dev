@@ -1,0 +1,55 @@
+name: finallanggo
+description: A Filipino language learning application with gamification elements.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  shared_preferences: ^2.1.1
+  provider: ^6.0.5
+  http: ^0.13.6
+  flutter_svg: ^2.0.5
+  cached_network_image: ^3.2.3
+  intl: ^0.18.1
+  flutter_tts: ^3.7.0
+  sqflite: ^2.2.8+4
+  flutter_markdown: ^0.6.15
+  url_launcher: ^6.1.11
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/drawer_bg.png
+    - assets/images/logo.png
+    - assets/images/whiteboy.png
+    - assets/images/girlwhite.png
+    - assets/images/blackgirl.png
+    - assets/images/michael-rivera-n6BxzwOGTC4-unsplash.jpg
+    - assets/images/blackboy.png
+    - assets/images/mascot/mascot_tagalog.png
+    - assets/images/mascot/mascot_ilonggo.png
+    - assets/images/mascot/mascot_cebuano.png
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
