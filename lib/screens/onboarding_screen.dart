@@ -22,7 +22,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       "id": "welcome",
       "title": "Welcome to LangGo!",
-      "description": "Learn Philippine Native languages in a fun and interactive way.",
+      "description":
+          "Learn Philippine Native languages in a fun and interactive way.",
     },
     {
       "id": "language",
@@ -140,7 +141,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             _steps[_currentPage]["description"]!,
                             style: const TextStyle(
                               fontSize: 16,
-                              color: Colors.white70, // Light color for readability
+                              color:
+                                  Colors.white70, // Light color for readability
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -149,7 +151,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.volume_up, color: Colors.white),
-                      onPressed: () => _speak(_steps[_currentPage]["description"]!),
+                      onPressed: () =>
+                          _speak(_steps[_currentPage]["description"]!),
                     ),
                   ],
                 ),
@@ -199,7 +202,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ? const Icon(Icons.arrow_forward)
                           : const Icon(Icons.check),
                       label: Text(
-                        _currentPage < _steps.length - 1 ? 'Continue' : 'Start Learning',
+                        _currentPage < _steps.length - 1
+                            ? 'Continue'
+                            : 'Start Learning',
                       ),
                     ),
                   ],
@@ -217,7 +222,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Mascot(
-          message: "Mabuhay! Welcome to your Filipino Native language learning journey!",
+          message:
+              "Mabuhay! Welcome to your Filipino Native language learning journey!",
         ),
         SizedBox(height: 24),
         Text(
@@ -234,7 +240,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          "Choose which Philippine language you'd like to learn:",
+          "Choose which Philippine language you'd like to learn",
           style: TextStyle(fontSize: 16, color: Colors.white70),
           textAlign: TextAlign.center,
         ),
