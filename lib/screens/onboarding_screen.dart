@@ -63,9 +63,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
   }
 
-  void _handleNext() async {
+  Future<void> _handleNext() async {
     if (_currentPage < _steps.length - 1) {
-      _pageController.nextPage(
+      await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
@@ -74,7 +74,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       await prefs.setBool('hasCompletedOnboarding', true);
       await prefs.setString('selectedLanguage', _selectedLanguage);
       await prefs.setString('dailyGoal', _dailyGoal);
-      Navigator.pushReplacementNamed(context, '/home');
+      await Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
@@ -139,11 +139,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                           Text(
                             _steps[_currentPage]["description"]!,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color:
-                                  Colors.white70, // Light color for readability
-                            ),
+                            style: commonTextStyle,
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -228,7 +224,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SizedBox(height: 24),
         Text(
           'Get ready to learn Philippine Native languages through fun, interactive lessons and games! Earn XP, complete quests, and track your progress as you learn!',
-          style: TextStyle(fontSize: 16, color: Colors.white70),
+          style: commonTextStyle,
           textAlign: TextAlign.center,
         ),
       ],
@@ -241,7 +237,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         const Text(
           "Choose which Philippine language you'd like to learn",
-          style: TextStyle(fontSize: 16, color: Colors.white70),
+          style: commonTextStyle,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),
@@ -262,7 +258,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         Text(
           "How much time would you like to dedicate to learning each day?",
-          style: TextStyle(fontSize: 16, color: Colors.white70),
+          style: commonTextStyle,
           textAlign: TextAlign.center,
         ),
       ],
@@ -277,3 +273,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
+
+const TextStyle commonTextStyle = TextStyle(
+  fontSize: 16,
+  color: Colors.white70,
+);

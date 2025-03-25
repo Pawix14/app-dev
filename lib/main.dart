@@ -4,6 +4,7 @@ import 'package:finallanggo/screens/login_screen.dart';
 import 'package:finallanggo/screens/home_screen.dart';
 import 'package:finallanggo/screens/profile_screen.dart';
 import 'package:finallanggo/screens/lesson_screen.dart';
+import 'package:finallanggo/screens/lesson_complete_screen.dart'; // Add this import
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:finallanggo/models/user.dart';
 
@@ -79,13 +80,18 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       initialRoute: isFirstVisit ? '/login' : (isLoggedIn ? '/home' : '/login'),
-
       routes: {
         '/login': (context) => const LoginScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/lesson': (context) => const LessonScreen(),
+        '/lesson-complete': (context) => const LessonCompleteScreen(
+          correctAnswers: 0, // Placeholder, will be replaced with actual values
+          incorrectAnswersCount: 0, // Placeholder, will be replaced with actual values
+          totalQuestions: 0, // Placeholder, will be replaced with actual values
+          timeTaken: 0, // Placeholder, will be replaced with actual values
+        ),
       },
     );
   }

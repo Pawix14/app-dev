@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import for rootBundle
 import 'package:finallanggo/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +13,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  String _avatarPath = 'assets/images/whiteboy.png'; // Default avatar path
+  String _avatarPath = 'assets/images/whiteboy.png'; 
 
   @override
   void initState() {
@@ -21,34 +22,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadProfileData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _nameController.text = prefs.getString('userName') ?? '';
-      _ageController.text = prefs.getInt('userAge')?.toString() ?? ''; // Load age
-      _avatarPath = prefs.getString('userAvatar') ?? 'assets/images/whiteboy.png';
-      currentUser.name = _nameController.text; // Ensure currentUser is updated
-      currentUser.avatar = _avatarPath; // Ensure currentUser is updated
-    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        _nameController.text = prefs.getString('userName') ?? '';
+        _ageController.text = prefs.getInt('userAge')?.toString() ?? ''; // Load age
+        _avatarPath = prefs.getString('userAvatar') ?? 'assets/images/whiteboy.png';
+      });
+
+      if (!await _imageExists(_avatarPath)) {
+        setState(() {
+          _avatarPath = 'assets/images/whiteboy.png'; // Reset to default if the image doesn't exist
+        });
+      }
+
+      // Ensure currentUser is updated if it exists in your app
+      if (currentUser != null) {
+        currentUser.name = _nameController.text;
+        currentUser.avatar = _avatarPath;
+      }
+    } catch (e) {
+      _showErrorSnackBar('Failed to load profile data.');
+    }
   }
 
   Future<void> _saveProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName', _nameController.text);
-    await prefs.setInt('userAge', int.tryParse(_ageController.text) ?? 0); // Save age
-    await prefs.setString('userAvatar', _avatarPath); // Ensure avatar is saved
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userName', _nameController.text);
+      await prefs.setInt('userAge', int.tryParse(_ageController.text) ?? 0); // Save age
+      await prefs.setString('userAvatar', _avatarPath); // Ensure avatar is saved
 
-    setState(() { 
-      currentUser.name = _nameController.text; // Update currentUser
-      currentUser.avatar = _avatarPath; // Update currentUser
-    });
+      setState(() {
+        if (currentUser != null) {
+          currentUser.name = _nameController.text;
+          currentUser.avatar = _avatarPath;
+        }
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Profile saved successfully!")),
-    );
+      _showSuccessSnackBar('Profile saved successfully!');
+    } catch (e) {
+      _showErrorSnackBar('Failed to save profile.');
+    }
   }
 
   void _logout() {
     Navigator.pushReplacementNamed(context, '/login');
+  }
+
+  Future<bool> _imageExists(String path) async {
+    try {
+      await rootBundle.load(path);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: const TextStyle(color: Colors.green))),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: const TextStyle(color: Colors.red))),
+    );
   }
 
   @override
@@ -93,7 +133,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             GestureDetector(
-              onTap: () {}, // You can add image picker here
+              onTap: () {
+                // Implement image picker logic here
+                _showSuccessSnackBar('Image picker not implemented.');
+              },
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage(_avatarPath),
@@ -117,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(

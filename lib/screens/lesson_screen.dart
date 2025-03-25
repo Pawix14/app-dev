@@ -4,7 +4,9 @@ import 'package:finallanggo/models/lesson.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class LessonScreen extends StatefulWidget {
-  const LessonScreen({super.key});
+  final String? lessonId;
+
+  const LessonScreen({super.key, this.lessonId});
 
   @override
   _LessonScreenState createState() => _LessonScreenState();
@@ -16,28 +18,45 @@ class _LessonScreenState extends State<LessonScreen>
   String? selectedAnswer;
   bool isAnswerChecked = false;
   int correctAnswers = 0;
+  List<String> incorrectAnswers = [];
+  DateTime? lessonStartTime;
+  bool isLoading = true;
+
   final FlutterTts flutterTts = FlutterTts();
   late List<Exercise> filteredExercises = [];
   late AnimationController _fadeController;
+  late Lesson currentLesson;
 
   @override
   void initState() {
     super.initState();
     _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 700),
       vsync: this,
     );
+
+    lessonStartTime = DateTime.now();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _filterExercises();
+    _loadLessonAndExercises();
   }
 
-  void _filterExercises() {
-    final lessonId = ModalRoute.of(context)?.settings.arguments as String?;
+  Future<void> _loadLessonAndExercises() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    // Get lessonId from widget or route arguments
+    final lessonId = widget.lessonId ?? ModalRoute.of(context)?.settings.arguments as String?;
+    print("Loading lesson with ID: $lessonId"); // Debug statement to log lessonId
+
     if (lessonId != null) {
+      // Simulate network delay for fetching data
+      await Future.delayed(const Duration(milliseconds: 800));
+
       final lesson = sampleLessons.firstWhere(
         (lesson) => lesson.id == lessonId,
         orElse: () => Lesson(
@@ -52,23 +71,23 @@ class _LessonScreenState extends State<LessonScreen>
         ),
       );
 
-      debugPrint("Lesson ID: $lessonId");
-      debugPrint("Lesson dialect: ${lesson.dialect}");
+      currentLesson = lesson;
+
+      final exercises = sampleExercises.where((exercise) {
+      print("Filtering exercises for lesson ID: ${lesson.id} and dialect: ${lesson.dialect}"); // Debug statement to log filtering
+        return exercise.lessonId == lesson.id &&
+            exercise.dialect.toLowerCase() == lesson.dialect.toLowerCase();
+      }).toList();
 
       setState(() {
-        // ✅ Fixed Filtering Logic
-        filteredExercises = sampleExercises.where((exercise) {
-          debugPrint(
-              "Exercise - lessonId: ${exercise.lessonId}, dialect: ${exercise.dialect}");
-          return exercise.lessonId == lesson.id &&
-              exercise.dialect.toLowerCase() == lesson.dialect.toLowerCase();
-        }).toList();
-
-        _fadeController.forward(); // ✅ Start the fade animation
+        filteredExercises = exercises;
+        isLoading = false;
+        _fadeController.forward();
       });
-
-      debugPrint(
-          "Filtered ${filteredExercises.length} exercises for dialect: ${lesson.dialect}");
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -111,6 +130,8 @@ class _LessonScreenState extends State<LessonScreen>
       isAnswerChecked = true;
       if (selectedAnswer == currentExercise.correctAnswer) {
         correctAnswers++;
+      } else {
+        incorrectAnswers.add(currentExercise.question);
       }
     });
   }
@@ -124,7 +145,15 @@ class _LessonScreenState extends State<LessonScreen>
         isAnswerChecked = false;
       });
     } else {
-      Navigator.pushReplacementNamed(context, '/lesson-complete');
+      final lessonEndTime = DateTime.now();
+      final timeTaken = lessonEndTime.difference(lessonStartTime!).inSeconds;
+      Navigator.pushReplacementNamed(context, '/lesson-complete', arguments: {
+        'incorrectAnswers': incorrectAnswers.length,
+        'correctAnswers': correctAnswers,
+        'totalQuestions': filteredExercises.length,
+        'timeTaken': timeTaken,
+        'incorrectAnswersCount': incorrectAnswers.length,
+      });
     }
   }
 
@@ -147,7 +176,6 @@ class _LessonScreenState extends State<LessonScreen>
     }
   }
 
-  // Get status color for option based on selection and check status
   Color getOptionColor(String option) {
     if (!isAnswerChecked) {
       return selectedAnswer == option ? Colors.blue.shade300 : Colors.white;
@@ -163,7 +191,6 @@ class _LessonScreenState extends State<LessonScreen>
     }
   }
 
-  // Get border color for option based on selection and check status
   Color getOptionBorderColor(String option) {
     if (!isAnswerChecked) {
       return selectedAnswer == option
@@ -181,7 +208,6 @@ class _LessonScreenState extends State<LessonScreen>
     }
   }
 
-  // Get icon for option based on selection and check status
   Widget? getOptionIcon(String option) {
     if (!isAnswerChecked) {
       return selectedAnswer == option
@@ -201,315 +227,329 @@ class _LessonScreenState extends State<LessonScreen>
 
   @override
   Widget build(BuildContext context) {
-    final lessonId = ModalRoute.of(context)?.settings.arguments as String?;
-    if (lessonId == null || filteredExercises.isEmpty) {
+    if (isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Lesson')),
+        appBar: AppBar(
+          title: const Text('Loading Lesson'),
+          backgroundColor: Colors.blue.shade900,
+        ),
         body: const Center(
-            child: Text('No lesson selected or no exercises available.')),
+          child: CircularProgressIndicator(),
+        ),
       );
     }
 
-    final lesson = sampleLessons.firstWhere((lesson) => lesson.id == lessonId);
+    if (filteredExercises.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Lesson')),
+        body: const Center(
+            child: Text('No exercises available for this lesson.')),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(lesson.title),
+        title: Text(currentLesson.title),
         backgroundColor: Colors.blue.shade900,
         elevation: 0,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/drawer_bg.png'),
-            fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/drawer_bg.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLessonHeader(currentLesson),
+                const SizedBox(height: 20),
+                _buildLessonDescription(currentLesson),
+                const SizedBox(height: 20),
+                _buildQuestionCard(),
+              ],
+            ),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+    );
+  }
+
+  Widget _buildLessonHeader(Lesson lesson) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade900.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            lesson.title,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          Row(
             children: [
-              // Lesson Title & Progress
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade900.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.blue.shade700,
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      lesson.title,
+                      '${currentExerciseIndex + 1}/${filteredExercises.length}',
                       style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade700,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            '${currentExerciseIndex + 1}/${filteredExercises.length}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
+                    const SizedBox(width: 8),
+                    if (currentExerciseIndex + 1 == filteredExercises.length)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          'Achievement Unlocked!',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        SizedBox(
-                          width: 100,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: LinearProgressIndicator(
-                              value: progress / 100,
-                              backgroundColor:
-                                  Colors.blue.shade200.withOpacity(0.3),
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.blue.shade300),
-                              minHeight: 8,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-
-              // Animated Question Card
-              Expanded(
-                child: FadeTransition(
-                  opacity: _fadeController,
-                  child: Card(
-                    color: Colors.blue.shade800,
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Question Text & Speak Button
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade700,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    currentExercise.question,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade600,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.volume_up,
-                                        color: Colors.white),
-                                    onPressed: () =>
-                                        speak(currentExercise.question),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-
-                          // Answer Options
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: currentExercise.options
-                                    .map((option) => Container(
-                                          margin:
-                                              const EdgeInsets.only(bottom: 12),
-                                          width: double.infinity,
-                                          child: Material(
-                                            color: getOptionColor(option),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            elevation: selectedAnswer == option
-                                                ? 2
-                                                : 0,
-                                            child: InkWell(
-                                              onTap: isAnswerChecked
-                                                  ? null
-                                                  : () => handleSelectAnswer(
-                                                      option),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  border: Border.all(
-                                                    color: getOptionBorderColor(
-                                                        option),
-                                                    width: 2,
-                                                  ),
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 16,
-                                                        vertical: 14),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        option,
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              selectedAnswer ==
-                                                                      option
-                                                                  ? FontWeight
-                                                                      .bold
-                                                                  : FontWeight
-                                                                      .normal,
-                                                          color:
-                                                              selectedAnswer ==
-                                                                      option
-                                                                  ? Colors.blue
-                                                                      .shade900
-                                                                  : Colors.blue
-                                                                      .shade900,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    if (getOptionIcon(option) !=
-                                                        null)
-                                                      getOptionIcon(option)!,
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
-                          ),
-
-                          // Answer Feedback
-                          if (isAnswerChecked)
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(12),
-                              margin: const EdgeInsets.only(bottom: 16, top: 8),
-                              decoration: BoxDecoration(
-                                color: isCorrect
-                                    ? Colors.green.withOpacity(0.2)
-                                    : Colors.red.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isCorrect ? Colors.green : Colors.red,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    isCorrect
-                                        ? Icons.check_circle
-                                        : Icons.cancel,
-                                    color:
-                                        isCorrect ? Colors.green : Colors.red,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      isCorrect
-                                          ? "Correct! Well done!"
-                                          : "Incorrect. The correct answer is: ${currentExercise.correctAnswer}",
-                                      style: TextStyle(
-                                        color: isCorrect
-                                            ? Colors.green
-                                            : Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                          // Next / Check Answer Button
-                          SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isAnswerChecked
-                                    ? Colors.green.shade600
-                                    : Colors.blue.shade500,
-                                foregroundColor: Colors.white,
-                                elevation: 4,
-                                padding: const EdgeInsets.all(12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              onPressed: selectedAnswer == null
-                                  ? null
-                                  : (isAnswerChecked
-                                      ? handleNextExercise
-                                      : handleCheckAnswer),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    isAnswerChecked
-                                        ? 'Continue'
-                                        : 'Check Answer',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Icon(
-                                    isAnswerChecked
-                                        ? Icons.arrow_forward
-                                        : Icons.check_circle,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: progress / 100,
+                    backgroundColor: Colors.blue.shade200.withOpacity(0.3),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.blue.shade300),
+                    minHeight: 8,
                   ),
                 ),
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLessonDescription(Lesson lesson) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.85),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: SingleChildScrollView(
+        child: Text(
+          lesson.description,
+          style: const TextStyle(
+            fontSize: 20,
+            height: 1.6,
+            color: Colors.black87,
+          ),
+          textAlign: TextAlign.justify,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuestionCard() {
+    return FadeTransition(
+      opacity: _fadeController,
+      child: Card(
+        color: Colors.blue.shade800,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildQuestionText(),
+              const SizedBox(height: 24),
+              _buildAnswerOptions(),
+              if (isAnswerChecked) _buildAnswerFeedback(),
+              _buildNextOrCheckButton(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuestionText() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade700,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              currentExercise.question,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue.shade600,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.volume_up, color: Colors.white),
+              onPressed: () => speak(currentExercise.question),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerOptions() {
+    return Flexible(
+      child: SingleChildScrollView(
+        child: Column(
+          children: currentExercise.options
+              .map((option) => Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    width: double.infinity,
+                    child: Material(
+                      color: getOptionColor(option),
+                      borderRadius: BorderRadius.circular(12),
+                      elevation: selectedAnswer == option ? 2 : 0,
+                      child: InkWell(
+                        onTap: isAnswerChecked ? null : () => handleSelectAnswer(option),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: getOptionBorderColor(option),
+                              width: 2,
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  option,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: selectedAnswer == option ? FontWeight.bold : FontWeight.normal,
+                                    color: selectedAnswer == option ? Colors.blue.shade900 : Colors.blue.shade900,
+                                  ),
+                                ),
+                              ),
+                              if (getOptionIcon(option) != null) getOptionIcon(option)!,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnswerFeedback() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 16, top: 8),
+      decoration: BoxDecoration(
+        color: isCorrect ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isCorrect ? Colors.green : Colors.red,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isCorrect ? Icons.check_circle : Icons.cancel,
+            color: isCorrect ? Colors.green : Colors.red,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              isCorrect ? "Correct! Well done!" : "Incorrect. The correct answer is: ${currentExercise.correctAnswer}",
+              style: TextStyle(
+                color: isCorrect ? Colors.green : Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNextOrCheckButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isAnswerChecked ? Colors.green.shade600 : Colors.blue.shade500,
+          foregroundColor: Colors.white,
+          elevation: 4,
+          padding: const EdgeInsets.all(12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: selectedAnswer == null ? null : (isAnswerChecked ? handleNextExercise : handleCheckAnswer),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              isAnswerChecked ? 'Continue' : 'Check Answer',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              isAnswerChecked ? Icons.arrow_forward : Icons.check_circle,
+            ),
+          ],
         ),
       ),
     );

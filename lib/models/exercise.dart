@@ -31,8 +31,47 @@ enum ExerciseType {
   multipleChoice
 }
 
-// Sample exercises
 List<Exercise> sampleExercises = [
+  // Ilonggo Numbers Exercises (2 questions)
+  Exercise(
+      id: "31",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.vocabulary,
+      question: "What is 'ten' in Ilonggo?",
+      options: ["Sampu", "Napulo", "Lima", "Walo"],
+      correctAnswer: "Sampu",
+      dialect: "Ilonggo"),
+  Exercise(
+      id: "32",
+      lessonId: "numbers_ilonggo",
+      category: "Numbers & Counting",
+      type: ExerciseType.vocabulary,
+      question: "How do you say 'twenty' in Ilonggo?",
+      options: ["Baynte", "Dugay", "Sampu", "Tulo"],
+      correctAnswer: "Baynte",
+      dialect: "Ilonggo"),
+
+  // Cebuano Family Members Exercises (2 questions)
+  Exercise(
+      id: "33",
+      lessonId: "family_cebuano",
+      category: "Family Members",
+      type: ExerciseType.vocabulary,
+      question: "What is the Cebuano term for 'Aunt/Uncle'?",
+      options: ["Tiya", "Tiyo", "Ig-agaw", "Kapatid"],
+      correctAnswer: "Tiya",
+      dialect: "Cebuano"),
+  Exercise(
+      id: "34",
+      lessonId: "family_cebuano",
+      category: "Family Members",
+      type: ExerciseType.vocabulary,
+      question: "What is the Cebuano term for 'Cousin'?",
+      options: ["Ig-agaw", "Kapatid", "Tiyo", "Tiya"],
+      correctAnswer: "Ig-agaw",
+      dialect: "Cebuano"),
+
   // Tagalog Exercises (10 questions)
   Exercise(
       id: "1",
